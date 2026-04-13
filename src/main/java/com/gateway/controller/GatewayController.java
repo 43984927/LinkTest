@@ -45,13 +45,40 @@ public class GatewayController {
 
 	@GetMapping("/")
 	public String welcome() {
-		return "<h1>🛡️ Resilience-Gateway 运行中</h1>" +
-		       "<p>这是一个具备混沌工程能力的网关原型。</p>" +
-		       "<ul>" +
-		       "<li>测试正常路径: <a href='/api/v1/proxy'>/api/v1/proxy</a></li>" +
-		       "<li>测试3秒延迟: <a href='/api/v1/proxy?delayMs=3000'>/api/v1/proxy?delayMs=3000</a></li>" +
-		       "<li>测试故障注入: <a href='/api/v1/proxy?forceError=true'>/api/v1/proxy?forceError=true</a></li>" +
-		       "</ul>";
+		return "<!DOCTYPE html>" +
+		       "<html lang='zh-CN'>" +
+		       "<head>" +
+		       "    <meta charset='UTF-8'>" +
+		       "    <meta name='viewport' content='width=device-width, initial-scale=1.0'>" +
+		       "    <title>🛡️ Resilience-Gateway</title>" +
+		       "    <style>" +
+		       "        * { margin: 0; padding: 0; box-sizing: border-box; }" +
+		       "        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; }" +
+		       "        .container { background: white; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); padding: 40px; max-width: 600px; width: 100%; text-align: center; }" +
+		       "        h1 { color: #333; margin-bottom: 20px; font-size: 28px; }" +
+		       "        p { color: #666; margin-bottom: 30px; font-size: 16px; line-height: 1.6; }" +
+		       "        .test-links { background: #f8f9fa; border-radius: 10px; padding: 20px; margin-top: 20px; }" +
+		       "        .test-links h3 { color: #333; margin-bottom: 15px; font-size: 18px; }" +
+		       "        .link-item { display: block; margin: 10px 0; }" +
+		       "        .link-item a { color: #667eea; text-decoration: none; font-size: 15px; transition: all 0.3s; }" +
+		       "        .link-item a:hover { color: #764ba2; text-decoration: underline; }" +
+		       "        .status { display: inline-block; padding: 5px 15px; background: #28a745; color: white; border-radius: 20px; font-size: 14px; margin-bottom: 20px; }" +
+		       "    </style>" +
+		       "</head>" +
+		       "<body>" +
+		       "    <div class='container'>" +
+		       "        <div class='status'>✅ 运行中</div>" +
+		       "        <h1>🛡️ Resilience-Gateway</h1>" +
+		       "        <p>这是一个具备混沌工程能力的网关原型，支持故障注入和延迟测试。</p>" +
+		       "        <div class='test-links'>" +
+		       "            <h3>🧪 测试接口</h3>" +
+		       "            <div class='link-item'>📄 <a href='/api/v1/proxy'>/api/v1/proxy</a> - 正常请求</div>" +
+		       "            <div class='link-item'>⏳ <a href='/api/v1/proxy?delayMs=3000'>/api/v1/proxy?delayMs=3000</a> - 测试3秒延迟</div>" +
+		       "            <div class='link-item'>❌ <a href='/api/v1/proxy?forceError=true'>/api/v1/proxy?forceError=true</a> - 测试故障注入</div>" +
+		       "        </div>" +
+		       "    </div>" +
+		       "</body>" +
+		       "</html>";
 	}
 
 }
