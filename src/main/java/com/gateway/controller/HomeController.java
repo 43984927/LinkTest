@@ -8,7 +8,11 @@ public class HomeController {
 
 	@GetMapping("/")
 	public String home() {
-		return "redirect:/api/v1/";
+		return "redirect:/api/v1/home";
 	}
 
+	@GetMapping("/speedtest")
+	public String speedtest() {
+		return "redirect:/api/v1/speedtest";
+	}
 }

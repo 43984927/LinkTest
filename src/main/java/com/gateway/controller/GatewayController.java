@@ -94,7 +94,7 @@ public class GatewayController {
 		       "</html>";
 	}
 
-	@GetMapping("/")
+	@GetMapping("/home")
 	public String home() {
 		return "<!DOCTYPE html>" +
 		       "<html lang='zh-CN'>" +
