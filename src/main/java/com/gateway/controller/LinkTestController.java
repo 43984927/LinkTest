@@ -3,7 +3,8 @@ package com.gateway.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.InetAddress;
+import java.io.IOException;
+import java.net.*;
 import java.util.*;
 import java.util.concurrent.*;
 
@@ -11,14 +12,24 @@ import java.util.concurrent.*;
 @RequestMapping("/api/v1/linktest")
 public class LinkTestController {
 
-	private static final Map<String, String> TEST_REGIONS = new LinkedHashMap<>();
+	private static final Map<String, TestEndpoint> TEST_REGIONS = new LinkedHashMap<>();
 	
 	static {
-		TEST_REGIONS.put("北美", "8.8.8.8");
-		TEST_REGIONS.put("欧洲", "1.1.1.1");
-		TEST_REGIONS.put("东南亚", "208.67.222.222");
-		TEST_REGIONS.put("拉美", "9.9.9.9");
-		TEST_REGIONS.put("中东", "149.112.112.112");
+		TEST_REGIONS.put("北美", new TestEndpoint("https://www.google.com", "8.8.8.8"));
+		TEST_REGIONS.put("欧洲", new TestEndpoint("https://www.cloudflare.com", "1.1.1.1"));
+		TEST_REGIONS.put("东南亚", new TestEndpoint("https://www.yahoo.com", "208.67.222.222"));
+		TEST_REGIONS.put("拉美", new TestEndpoint("https://www.wikipedia.org", "9.9.9.9"));
+		TEST_REGIONS.put("中东", new TestEndpoint("https://www.github.com", "149.112.112.112"));
+	}
+
+	private static class TestEndpoint {
+		String url;
+		String ip;
+		
+		TestEndpoint(String url, String ip) {
+			this.url = url;
+			this.ip = ip;
+		}
 	}
 
 	@GetMapping("/regions")
@@ -33,8 +44,8 @@ public class LinkTestController {
 	public ResponseEntity<Map<String, Object>> pingTest(@PathVariable String region) {
 		Map<String, Object> response = new HashMap<>();
 		
-		String host = TEST_REGIONS.get(region);
-		if (host == null) {
+		TestEndpoint endpoint = TEST_REGIONS.get(region);
+		if (endpoint == null) {
 			response.put("error", "Region not found");
 			return ResponseEntity.badRequest().body(response);
 		}
@@ -47,8 +58,7 @@ public class LinkTestController {
 			for (int i = 0; i < packetsSent; i++) {
 				try {
 					long startTime = System.currentTimeMillis();
-					InetAddress address = InetAddress.getByName(host);
-					boolean reachable = address.isReachable(2000);
+					boolean reachable = testHttpConnection(endpoint.url);
 					long endTime = System.currentTimeMillis();
 
 					if (reachable) {
@@ -64,7 +74,7 @@ public class LinkTestController {
 			double packetLoss = ((packetsSent - packetsReceived) / (double) packetsSent) * 100;
 			
 			response.put("region", region);
-			response.put("host", host);
+			response.put("host", endpoint.url);
 			response.put("packetsSent", packetsSent);
 			response.put("packetsReceived", packetsReceived);
 			response.put("packetLoss", String.format("%.1f", packetLoss) + "%");
@@ -101,9 +111,9 @@ public class LinkTestController {
 		ExecutorService executor = Executors.newFixedThreadPool(5);
 		List<Future<Map<String, Object>>> futures = new ArrayList<>();
 
-		for (Map.Entry<String, String> entry : TEST_REGIONS.entrySet()) {
+		for (Map.Entry<String, TestEndpoint> entry : TEST_REGIONS.entrySet()) {
 			String region = entry.getKey();
-			String host = entry.getValue();
+			TestEndpoint endpoint = entry.getValue();
 
 			futures.add(executor.submit(() -> {
 				Map<String, Object> result = new HashMap<>();
@@ -115,8 +125,7 @@ public class LinkTestController {
 					for (int i = 0; i < packetsSent; i++) {
 						try {
 							long startTime = System.currentTimeMillis();
-							InetAddress address = InetAddress.getByName(host);
-							boolean reachable = address.isReachable(2000);
+							boolean reachable = testHttpConnection(endpoint.url);
 							long endTime = System.currentTimeMillis();
 
 							if (reachable) {
@@ -131,7 +140,7 @@ public class LinkTestController {
 
 					double packetLoss = ((packetsSent - packetsReceived) / (double) packetsSent) * 100;
 					
-					result.put("host", host);
+					result.put("host", endpoint.url);
 					result.put("packetLoss", String.format("%.0f", packetLoss) + "%");
 					
 					if (!pingTimes.isEmpty()) {
@@ -170,6 +179,27 @@ public class LinkTestController {
 		return ResponseEntity.ok(response);
 	}
 
+	private boolean testHttpConnection(String urlStr) {
+		HttpURLConnection connection = null;
+		try {
+			URL url = new URL(urlStr);
+			connection = (HttpURLConnection) url.openConnection();
+			connection.setRequestMethod("HEAD");
+			connection.setConnectTimeout(2000);
+			connection.setReadTimeout(2000);
+			connection.setInstanceFollowRedirects(false);
+			
+			int responseCode = connection.getResponseCode();
+			return responseCode > 0;
+		} catch (IOException e) {
+			return false;
+		} finally {
+			if (connection != null) {
+				connection.disconnect();
+			}
+		}
+	}
+
 	@GetMapping("/myip")
 	public ResponseEntity<Map<String, Object>> getMyIP(@RequestHeader(value = "X-Forwarded-For", required = false) String forwardedFor,
 			                                           @RequestHeader(value = "X-Real-IP", required = false) String realIP) {
@@ -202,14 +232,18 @@ public class LinkTestController {
 		if (ip.contains(".")) {
 			String[] parts = ip.split("\\.");
 			if (parts.length >= 1) {
-				int firstOctet = Integer.parseInt(parts[0]);
-				
-				if (firstOctet >= 1 && firstOctet <= 50) return "北美";
-				if (firstOctet >= 51 && firstOctet <= 100) return "欧洲";
-				if (firstOctet >= 101 && firstOctet <= 150) return "东南亚";
-				if (firstOctet >= 151 && firstOctet <= 180) return "拉美";
-				if (firstOctet >= 181 && firstOctet <= 200) return "中东";
-				if (firstOctet >= 201 && firstOctet <= 223) return "亚太";
+				try {
+					int firstOctet = Integer.parseInt(parts[0]);
+					
+					if (firstOctet >= 1 && firstOctet <= 50) return "北美";
+					if (firstOctet >= 51 && firstOctet <= 100) return "欧洲";
+					if (firstOctet >= 101 && firstOctet <= 150) return "东南亚";
+					if (firstOctet >= 151 && firstOctet <= 180) return "拉美";
+					if (firstOctet >= 181 && firstOctet <= 200) return "中东";
+					if (firstOctet >= 201 && firstOctet <= 223) return "亚太";
+				} catch (NumberFormatException e) {
+					return "未知地区";
+				}
 			}
 		}
 		
