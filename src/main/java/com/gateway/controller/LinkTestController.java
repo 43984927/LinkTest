@@ -19,8 +19,8 @@ public class LinkTestController {
 	static {
 		TEST_REGIONS.put("北美", new TestEndpoint("https://www.google.com", "8.8.8.8"));
 		TEST_REGIONS.put("欧洲", new TestEndpoint("https://www.cloudflare.com", "1.1.1.1"));
-		TEST_REGIONS.put("东南亚", new TestEndpoint("https://www.yahoo.com", "208.67.222.222"));
-		TEST_REGIONS.put("拉美", new TestEndpoint("https://www.wikipedia.org", "9.9.9.9"));
+		TEST_REGIONS.put("东南亚", new TestEndpoint("https://sg.yahoo.com", "208.67.222.222"));
+		TEST_REGIONS.put("拉美", new TestEndpoint("https://es.wikipedia.org", "9.9.9.9"));
 		TEST_REGIONS.put("中东", new TestEndpoint("https://www.github.com", "149.112.112.112"));
 	}
 
@@ -115,17 +115,17 @@ public class LinkTestController {
 			"                </tr>" +
 			"                <tr>" +
 			"                    <td><div class='region-cell'><span class='region-flag'>🇸🇬</span><span class='region-name'>东南亚</span></div></td>" +
-			"                    <td><span class='host-cell'>https://www.yahoo.com</span></td>" +
+			"                    <td><span class='host-cell'>https://sg.yahoo.com</span></td>" +
 			"                    <td><span class='ip-cell'>208.67.222.222</span></td>" +
-			"                    <td><span class='desc-cell'>OpenDNS，亚太地区重要节点</span></td>" +
+			"                    <td><span class='desc-cell'>Yahoo 新加坡，东南亚核心节点</span></td>" +
 			"                    <td><span class='status-badge active'>活跃</span></td>" +
 			"                    <td><button class='test-btn' onclick=\"testRegion('东南亚')\">测试</button></td>" +
 			"                </tr>" +
 			"                <tr>" +
 			"                    <td><div class='region-cell'><span class='region-flag'>🇧🇷</span><span class='region-name'>拉美</span></div></td>" +
-			"                    <td><span class='host-cell'>https://www.wikipedia.org</span></td>" +
+			"                    <td><span class='host-cell'>https://es.wikipedia.org</span></td>" +
 			"                    <td><span class='ip-cell'>9.9.9.9</span></td>" +
-			"                    <td><span class='desc-cell'>Quad9 DNS，拉美地区节点</span></td>" +
+			"                    <td><span class='desc-cell'>西班牙语维基百科，拉美主要站点</span></td>" +
 			"                    <td><span class='status-badge active'>活跃</span></td>" +
 			"                    <td><button class='test-btn' onclick=\"testRegion('拉美')\">测试</button></td>" +
 			"                </tr>" +
