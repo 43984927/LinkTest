@@ -3,7 +3,9 @@ package com.gateway.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.*;
 import java.util.*;
 import java.util.concurrent.*;
@@ -202,29 +204,76 @@ public class LinkTestController {
 
 	@GetMapping("/myip")
 	public ResponseEntity<Map<String, Object>> getMyIP(@RequestHeader(value = "X-Forwarded-For", required = false) String forwardedFor,
-			                                           @RequestHeader(value = "X-Real-IP", required = false) String realIP) {
+			                                           @RequestHeader(value = "X-Real-IP", required = false) String realIP,
+			                                           @RequestHeader(value = "CF-Connecting-IP", required = false) String cfIP) {
 		Map<String, Object> response = new HashMap<>();
 		
 		String clientIP = null;
-		if (forwardedFor != null && !forwardedFor.isEmpty()) {
+		
+		if (cfIP != null && !cfIP.isEmpty()) {
+			clientIP = cfIP.trim();
+		} else if (forwardedFor != null && !forwardedFor.isEmpty()) {
 			clientIP = forwardedFor.split(",")[0].trim();
 		} else if (realIP != null && !realIP.isEmpty()) {
-			clientIP = realIP;
+			clientIP = realIP.trim();
+		}
+		
+		if (clientIP == null || clientIP.isEmpty()) {
+			clientIP = getPublicIP();
 		}
 
-		if (clientIP != null) {
+		if (clientIP != null && !clientIP.isEmpty()) {
 			response.put("ip", clientIP);
 			response.put("location", detectLocation(clientIP));
 		} else {
-			response.put("ip", "Unknown");
-			response.put("location", "Unknown");
+			response.put("ip", "检测中");
+			response.put("location", "未知");
 		}
 
 		response.put("timestamp", System.currentTimeMillis());
 		return ResponseEntity.ok(response);
 	}
 
+	private String getPublicIP() {
+		String[] ipServices = {
+			"https://api.ipify.org",
+			"https://icanhazip.com",
+			"https://ifconfig.me/ip"
+		};
+		
+		for (String service : ipServices) {
+			HttpURLConnection connection = null;
+			try {
+				URL url = new URL(service);
+				connection = (HttpURLConnection) url.openConnection();
+				connection.setRequestMethod("GET");
+				connection.setConnectTimeout(2000);
+				connection.setReadTimeout(2000);
+				
+				BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+				String ip = reader.readLine().trim();
+				reader.close();
+				
+				if (ip != null && !ip.isEmpty()) {
+					return ip;
+				}
+			} catch (Exception e) {
+				// Try next service
+			} finally {
+				if (connection != null) {
+					connection.disconnect();
+				}
+			}
+		}
+		
+		return null;
+	}
+
 	private String detectLocation(String ip) {
+		if (ip == null || ip.isEmpty()) {
+			return "未知";
+		}
+		
 		if (ip.startsWith("192.168.") || ip.startsWith("10.") || ip.startsWith("172.")) {
 			return "本地网络";
 		}
@@ -242,12 +291,12 @@ public class LinkTestController {
 					if (firstOctet >= 181 && firstOctet <= 200) return "中东";
 					if (firstOctet >= 201 && firstOctet <= 223) return "亚太";
 				} catch (NumberFormatException e) {
-					return "未知地区";
+					return "未知";
 				}
 			}
 		}
 		
-		return "未知地区";
+		return "未知";
 	}
 
 }
