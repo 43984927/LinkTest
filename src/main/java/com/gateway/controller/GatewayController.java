@@ -88,7 +88,7 @@ public class GatewayController {
 		       "            </div>" +
 		       "        </div>" +
 		       "        " +
-		       "        <a href='/' class='back-link'>← 返回链路测试Demo</a>" +
+		       "        <a href='/' class='back-link'>← 返回链路测速</a>" +
 		       "    </div>" +
 		       "</body>" +
 		       "</html>";
@@ -101,7 +101,7 @@ public class GatewayController {
 		       "<head>" +
 		       "    <meta charset='UTF-8'>" +
 		       "    <meta name='viewport' content='width=device-width, initial-scale=1.0'>" +
-		       "    <title>🌐 链路测试Demo</title>" +
+		       "    <title>🌐 链路测速</title>" +
 		       "    <style>" +
 		       "        * { margin: 0; padding: 0; box-sizing: border-box; }" +
 		       "        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 20px; }" +
@@ -142,7 +142,7 @@ public class GatewayController {
 		       "</head>" +
 		       "<body>" +
 		       "    <div class='container'>" +
-		       "        <h1>🌐 链路测试Demo</h1>" +
+		       "        <h1>🌐 链路测速</h1>" +
 		       "        <p class='subtitle'>测试您到全球各地区的网络连接质量</p>" +
 		       "        " +
 		       "        <div class='ip-info' id='ipInfo'>" +
