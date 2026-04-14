@@ -56,7 +56,7 @@ public class LinkTestController {
 			"        .container { background: white; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); padding: 40px; max-width: 900px; margin: 0 auto; }" +
 			"        h1 { color: #333; margin-bottom: 10px; font-size: 32px; text-align: center; }" +
 			"        .subtitle { color: #666; margin-bottom: 30px; font-size: 14px; text-align: center; }" +
-			"        .back-link { display: inline-block; margin-bottom: 20px; color: #667eea; text-decoration: none; font-size: 14px; }" +
+			"        .back-link { display: inline-block; margin-top: 20px; color: #667eea; text-decoration: none; font-size: 14px; }" +
 			"        .back-link:hover { text-decoration: underline; }" +
 			"        .nodes-table { width: 100%; border-collapse: collapse; margin-top: 20px; }" +
 			"        .nodes-table th { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 15px; text-align: left; font-weight: 600; }" +
@@ -82,7 +82,6 @@ public class LinkTestController {
 			"</head>" +
 			"<body>" +
 			"    <div class='container'>" +
-			"        <a href='/' class='back-link'>← 返回主页</a>" +
 			"        <h1>🌍 测试节点列表</h1>" +
 			"        <p class='subtitle'>全球网络连接质量测试节点</p>" +
 			"        " +
@@ -144,6 +143,8 @@ public class LinkTestController {
 			"        <div class='footer'>" +
 			"            共 5 个测试节点 | 数据更新于 " + java.time.LocalDateTime.now().toString().replace("T", " ") + 
 			"        </div>" +
+			"        " +
+			"        <a href='/' class='back-link'>← 返回主页</a>" +
 			"    </div>" +
 			"    " +
 			"    <script>" +

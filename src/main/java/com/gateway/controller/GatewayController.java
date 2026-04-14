@@ -88,7 +88,7 @@ public class GatewayController {
 		       "            </div>" +
 		       "        </div>" +
 		       "        " +
-		       "        <a href='/' class='back-link'>← 返回链路测速</a>" +
+		       "        <a href='/' class='back-link'>← 返回主页</a>" +
 		       "    </div>" +
 		       "</body>" +
 		       "</html>";
