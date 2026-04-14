@@ -39,6 +39,61 @@ public class GatewayController {
 		return ResponseEntity.ok(response);
 	}
 
+	@GetMapping("/chaos")
+	public String chaosTest() {
+		return "<!DOCTYPE html>" +
+		       "<html lang='zh-CN'>" +
+		       "<head>" +
+		       "    <meta charset='UTF-8'>" +
+		       "    <meta name='viewport' content='width=device-width, initial-scale=1.0'>" +
+		       "    <title>🛡️ 混沌工程测试</title>" +
+		       "    <style>" +
+		       "        * { margin: 0; padding: 0; box-sizing: border-box; }" +
+		       "        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 20px; }" +
+		       "        .container { background: white; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); padding: 40px; max-width: 800px; margin: 0 auto; }" +
+		       "        .status { display: inline-block; background: #28a745; color: white; padding: 5px 15px; border-radius: 20px; font-size: 12px; margin-bottom: 20px; }" +
+		       "        h1 { color: #333; margin-bottom: 10px; font-size: 32px; }" +
+		       "        .subtitle { color: #666; margin-bottom: 30px; font-size: 14px; }" +
+		       "        .test-links { background: #f8f9fa; border-radius: 15px; padding: 25px; margin-top: 20px; }" +
+		       "        .test-links h3 { color: #333; margin-bottom: 20px; font-size: 18px; }" +
+		       "        .link-item { background: white; border: 2px solid #e0e0e0; border-radius: 10px; padding: 15px 20px; margin-bottom: 15px; transition: all 0.3s; }" +
+		       "        .link-item:hover { border-color: #667eea; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }" +
+		       "        .link-item a { color: #667eea; text-decoration: none; font-weight: 500; font-size: 16px; display: block; }" +
+		       "        .link-item a:hover { color: #764ba2; }" +
+		       "        .link-desc { color: #666; font-size: 13px; margin-top: 5px; }" +
+		       "        .back-link { display: inline-block; margin-top: 20px; color: #667eea; text-decoration: none; font-size: 14px; }" +
+		       "        .back-link:hover { text-decoration: underline; }" +
+		       "        .icon { font-size: 20px; margin-right: 10px; }" +
+		       "    </style>" +
+		       "</head>" +
+		       "<body>" +
+		       "    <div class='container'>" +
+		       "        <div class='status'>✅ 运行中</div>" +
+		       "        <h1>🛡️ Resilience-Gateway</h1>" +
+		       "        <p class='subtitle'>这是一个具备混沌工程能力的网关原型，支持故障注入和延迟测试。</p>" +
+		       "        " +
+		       "        <div class='test-links'>" +
+		       "            <h3>🧪 测试接口</h3>" +
+		       "            <div class='link-item'>" +
+		       "                <a href='/api/v1/proxy'><span class='icon'>📄</span>/api/v1/proxy</a>" +
+		       "                <div class='link-desc'>正常请求 - 测试网关基本功能</div>" +
+		       "            </div>" +
+		       "            <div class='link-item'>" +
+		       "                <a href='/api/v1/proxy?delayMs=3000'><span class='icon'>⏳</span>/api/v1/proxy?delayMs=3000</a>" +
+		       "                <div class='link-desc'>测试3秒延迟 - 模拟网络延迟</div>" +
+		       "            </div>" +
+		       "            <div class='link-item'>" +
+		       "                <a href='/api/v1/proxy?forceError=true'><span class='icon'>❌</span>/api/v1/proxy?forceError=true</a>" +
+		       "                <div class='link-desc'>测试故障注入 - 模拟服务故障</div>" +
+		       "            </div>" +
+		       "        </div>" +
+		       "        " +
+		       "        <a href='/' class='back-link'>← 返回链路测试</a>" +
+		       "    </div>" +
+		       "</body>" +
+		       "</html>";
+	}
+
 	@GetMapping("/")
 	public String welcome() {
 		return "<!DOCTYPE html>" +
@@ -103,7 +158,7 @@ public class GatewayController {
 		       "        " +
 		       "        <div class='test-links'>" +
 		       "            <h3>🔧 其他工具</h3>" +
-		       "            <a href='/api/v1/proxy'>混沌工程测试</a>" +
+		       "            <a href='/api/v1/chaos'>混沌工程测试</a>" +
 		       "            <a href='/api/v1/linktest/regions'>测试节点列表</a>" +
 		       "        </div>" +
 		       "    </div>" +
