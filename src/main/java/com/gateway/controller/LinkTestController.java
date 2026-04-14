@@ -42,6 +42,145 @@ public class LinkTestController {
 		return ResponseEntity.ok(response);
 	}
 
+	@GetMapping("/nodes")
+	public ResponseEntity<String> getNodesPage() {
+		String html = "<!DOCTYPE html>" +
+			"<html lang='zh-CN'>" +
+			"<head>" +
+			"    <meta charset='UTF-8'>" +
+			"    <meta name='viewport' content='width=device-width, initial-scale=1.0'>" +
+			"    <title>🌍 测试节点列表</title>" +
+			"    <style>" +
+			"        * { margin: 0; padding: 0; box-sizing: border-box; }" +
+			"        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 20px; }" +
+			"        .container { background: white; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); padding: 40px; max-width: 900px; margin: 0 auto; }" +
+			"        h1 { color: #333; margin-bottom: 10px; font-size: 32px; text-align: center; }" +
+			"        .subtitle { color: #666; margin-bottom: 30px; font-size: 14px; text-align: center; }" +
+			"        .back-link { display: inline-block; margin-bottom: 20px; color: #667eea; text-decoration: none; font-size: 14px; }" +
+			"        .back-link:hover { text-decoration: underline; }" +
+			"        .nodes-table { width: 100%; border-collapse: collapse; margin-top: 20px; }" +
+			"        .nodes-table th { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 15px; text-align: left; font-weight: 600; }" +
+			"        .nodes-table th:first-child { border-radius: 10px 0 0 0; }" +
+			"        .nodes-table th:last-child { border-radius: 0 10px 0 0; }" +
+			"        .nodes-table td { padding: 15px; border-bottom: 1px solid #e0e0e0; }" +
+			"        .nodes-table tr:hover { background: #f8f9fa; }" +
+			"        .nodes-table tr:last-child td:first-child { border-radius: 0 0 0 10px; }" +
+			"        .nodes-table tr:last-child td:last-child { border-radius: 0 0 10px 0; }" +
+			"        .region-cell { display: flex; align-items: center; font-weight: 600; color: #333; }" +
+			"        .region-flag { font-size: 24px; margin-right: 10px; }" +
+			"        .region-name { font-size: 16px; }" +
+			"        .host-cell { font-family: monospace; color: #667eea; font-size: 13px; }" +
+			"        .ip-cell { font-family: monospace; color: #666; font-size: 13px; }" +
+			"        .desc-cell { color: #666; font-size: 13px; }" +
+			"        .status-badge { display: inline-block; padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 500; }" +
+			"        .status-badge.active { background: #d4edda; color: #155724; }" +
+			"        .status-badge.test { background: #cce5ff; color: #004085; }" +
+			"        .test-btn { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 8px 20px; border-radius: 20px; cursor: pointer; font-size: 13px; transition: all 0.3s; }" +
+			"        .test-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }" +
+			"        .footer { text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #e0e0e0; color: #999; font-size: 12px; }" +
+			"    </style>" +
+			"</head>" +
+			"<body>" +
+			"    <div class='container'>" +
+			"        <a href='/' class='back-link'>← 返回主页</a>" +
+			"        <h1>🌍 测试节点列表</h1>" +
+			"        <p class='subtitle'>全球网络连接质量测试节点</p>" +
+			"        " +
+			"        <table class='nodes-table'>" +
+			"            <thead>" +
+			"                <tr>" +
+			"                    <th>地区</th>" +
+			"                    <th>测试地址</th>" +
+			"                    <th>DNS IP</th>" +
+			"                    <th>说明</th>" +
+			"                    <th>状态</th>" +
+			"                    <th>操作</th>" +
+			"                </tr>" +
+			"            </thead>" +
+			"            <tbody>" +
+			"                <tr>" +
+			"                    <td><div class='region-cell'><span class='region-flag'>🇺🇸</span><span class='region-name'>北美</span></div></td>" +
+			"                    <td><span class='host-cell'>https://www.google.com</span></td>" +
+			"                    <td><span class='ip-cell'>8.8.8.8</span></td>" +
+			"                    <td><span class='desc-cell'>Google DNS，全球最大搜索引擎</span></td>" +
+			"                    <td><span class='status-badge active'>活跃</span></td>" +
+			"                    <td><button class='test-btn' onclick=\"testRegion('北美')\">测试</button></td>" +
+			"                </tr>" +
+			"                <tr>" +
+			"                    <td><div class='region-cell'><span class='region-flag'>🇪🇺</span><span class='region-name'>欧洲</span></div></td>" +
+			"                    <td><span class='host-cell'>https://www.cloudflare.com</span></td>" +
+			"                    <td><span class='ip-cell'>1.1.1.1</span></td>" +
+			"                    <td><span class='desc-cell'>Cloudflare DNS，全球领先 CDN</span></td>" +
+			"                    <td><span class='status-badge active'>活跃</span></td>" +
+			"                    <td><button class='test-btn' onclick=\"testRegion('欧洲')\">测试</button></td>" +
+			"                </tr>" +
+			"                <tr>" +
+			"                    <td><div class='region-cell'><span class='region-flag'>🇸🇬</span><span class='region-name'>东南亚</span></div></td>" +
+			"                    <td><span class='host-cell'>https://www.yahoo.com</span></td>" +
+			"                    <td><span class='ip-cell'>208.67.222.222</span></td>" +
+			"                    <td><span class='desc-cell'>OpenDNS，亚太地区重要节点</span></td>" +
+			"                    <td><span class='status-badge active'>活跃</span></td>" +
+			"                    <td><button class='test-btn' onclick=\"testRegion('东南亚')\">测试</button></td>" +
+			"                </tr>" +
+			"                <tr>" +
+			"                    <td><div class='region-cell'><span class='region-flag'>🇧🇷</span><span class='region-name'>拉美</span></div></td>" +
+			"                    <td><span class='host-cell'>https://www.wikipedia.org</span></td>" +
+			"                    <td><span class='ip-cell'>9.9.9.9</span></td>" +
+			"                    <td><span class='desc-cell'>Quad9 DNS，拉美地区节点</span></td>" +
+			"                    <td><span class='status-badge active'>活跃</span></td>" +
+			"                    <td><button class='test-btn' onclick=\"testRegion('拉美')\">测试</button></td>" +
+			"                </tr>" +
+			"                <tr>" +
+			"                    <td><div class='region-cell'><span class='region-flag'>🇦🇪</span><span class='region-name'>中东</span></div></td>" +
+			"                    <td><span class='host-cell'>https://www.github.com</span></td>" +
+			"                    <td><span class='ip-cell'>149.112.112.112</span></td>" +
+			"                    <td><span class='desc-cell'>GitHub，中东地区重要节点</span></td>" +
+			"                    <td><span class='status-badge active'>活跃</span></td>" +
+			"                    <td><button class='test-btn' onclick=\"testRegion('中东')\">测试</button></td>" +
+			"                </tr>" +
+			"            </tbody>" +
+			"        </table>" +
+			"        " +
+			"        <div class='footer'>" +
+			"            共 5 个测试节点 | 数据更新于 " + java.time.LocalDateTime.now().toString().replace("T", " ") + 
+			"        </div>" +
+			"    </div>" +
+			"    " +
+			"    <script>" +
+			"        async function testRegion(region) {" +
+			"            if (!confirm('确定要测试 ' + region + ' 吗？')) return;" +
+			"            " +
+			"            const btn = event.target;" +
+			"            btn.textContent = '测试中...';" +
+			"            btn.disabled = true;" +
+			"            " +
+			"            try {" +
+			"                const response = await fetch('/api/v1/linktest/ping/' + region);" +
+			"                const data = await response.json();" +
+			"                " +
+			"                let result = '地区: ' + region + '\\n';" +
+			"                result += '主机: ' + data.host + '\\n';" +
+			"                result += '发送包: ' + data.packetsSent + '\\n';" +
+			"                result += '接收包: ' + data.packetsReceived + '\\n';" +
+			"                result += '丢包率: ' + data.packetLoss + '\\n';" +
+			"                result += '平均延迟: ' + data.avgPing + '\\n';" +
+			"                result += '状态: ' + data.status;" +
+			"                " +
+			"                alert(result);" +
+			"            } catch (error) {" +
+			"                alert('测试失败: ' + error.message);" +
+			"            } finally {" +
+			"                btn.textContent = '测试';" +
+			"                btn.disabled = false;" +
+			"            }" +
+			"        }" +
+			"    </script>" +
+			"</body>" +
+			"</html>";
+		
+		return ResponseEntity.ok(html);
+	}
+
 	@GetMapping("/ping/{region}")
 	public ResponseEntity<Map<String, Object>> pingTest(@PathVariable String region) {
 		Map<String, Object> response = new HashMap<>();

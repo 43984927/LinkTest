@@ -95,13 +95,80 @@ public class GatewayController {
 	}
 
 	@GetMapping("/")
-	public String welcome() {
+	public String home() {
 		return "<!DOCTYPE html>" +
 		       "<html lang='zh-CN'>" +
 		       "<head>" +
 		       "    <meta charset='UTF-8'>" +
 		       "    <meta name='viewport' content='width=device-width, initial-scale=1.0'>" +
-		       "    <title>🌐 链路测速</title>" +
+		       "    <title>🌐 链路测速工具</title>" +
+		       "    <style>" +
+		       "        * { margin: 0; padding: 0; box-sizing: border-box; }" +
+		       "        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 20px; display: flex; align-items: center; justify-content: center; }" +
+		       "        .container { background: white; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); padding: 50px; max-width: 600px; width: 100%; }" +
+		       "        h1 { color: #333; margin-bottom: 10px; font-size: 36px; text-align: center; }" +
+		       "        .subtitle { color: #666; margin-bottom: 40px; font-size: 14px; text-align: center; }" +
+		       "        .menu { display: flex; flex-direction: column; gap: 20px; }" +
+		       "        .menu-item { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 25px 30px; border-radius: 15px; text-decoration: none; transition: all 0.3s; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }" +
+		       "        .menu-item:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(0,0,0,0.3); }" +
+		       "        .menu-item .icon { font-size: 40px; }" +
+		       "        .menu-item .content { flex: 1; margin-left: 20px; }" +
+		       "        .menu-item .title { font-size: 20px; font-weight: bold; margin-bottom: 5px; }" +
+		       "        .menu-item .desc { font-size: 13px; opacity: 0.9; }" +
+		       "        .menu-item .arrow { font-size: 24px; opacity: 0.7; }" +
+		       "        .footer { text-align: center; margin-top: 30px; color: #999; font-size: 12px; }" +
+		       "    </style>" +
+		       "</head>" +
+		       "<body>" +
+		       "    <div class='container'>" +
+		       "        <h1>🌐 链路测速工具</h1>" +
+		       "        <p class='subtitle'>全球网络连接质量测试平台</p>" +
+		       "        " +
+		       "        <div class='menu'>" +
+		       "            <a href='/speedtest' class='menu-item'>" +
+		       "                <span class='icon'>🚀</span>" +
+		       "                <div class='content'>" +
+		       "                    <div class='title'>链路测速</div>" +
+		       "                    <div class='desc'>测试到全球各地区的网络延迟和丢包率</div>" +
+		       "                </div>" +
+		       "                <span class='arrow'>→</span>" +
+		       "            </a>" +
+		       "            " +
+		       "            <a href='/api/v1/chaos' class='menu-item'>" +
+		       "                <span class='icon'>🛡️</span>" +
+		       "                <div class='content'>" +
+		       "                    <div class='title'>混沌工程测试</div>" +
+		       "                    <div class='desc'>模拟故障和延迟，测试系统稳定性</div>" +
+		       "                </div>" +
+		       "                <span class='arrow'>→</span>" +
+		       "            </a>" +
+		       "            " +
+		       "            <a href='/api/v1/linktest/nodes' class='menu-item'>" +
+		       "                <span class='icon'>🌍</span>" +
+		       "                <div class='content'>" +
+		       "                    <div class='title'>测试节点列表</div>" +
+		       "                    <div class='desc'>查看全球测试节点详细信息</div>" +
+		       "                </div>" +
+		       "                <span class='arrow'>→</span>" +
+		       "            </a>" +
+		       "        </div>" +
+		       "        " +
+		       "        <div class='footer'>" +
+		       "            Powered by Spring Boot | Deployed on Hugging Face Spaces" +
+		       "        </div>" +
+		       "    </div>" +
+		       "</body>" +
+		       "</html>";
+	}
+
+	@GetMapping("/speedtest")
+	public String speedtest() {
+		return "<!DOCTYPE html>" +
+		       "<html lang='zh-CN'>" +
+		       "<head>" +
+		       "    <meta charset='UTF-8'>" +
+		       "    <meta name='viewport' content='width=device-width, initial-scale=1.0'>" +
+		       "    <title>🚀 链路测速</title>" +
 		       "    <style>" +
 		       "        * { margin: 0; padding: 0; box-sizing: border-box; }" +
 		       "        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 20px; }" +
@@ -132,17 +199,15 @@ public class GatewayController {
 		       "        .progress { width: 100%; height: 4px; background: #e0e0e0; border-radius: 2px; margin-top: 15px; overflow: hidden; }" +
 		       "        .progress-bar { height: 100%; background: linear-gradient(90deg, #667eea, #764ba2); transition: width 0.3s; }" +
 		       "        .status { text-align: center; margin-top: 20px; font-size: 14px; color: #666; }" +
-		       "        .test-links { background: #f8f9fa; border-radius: 10px; padding: 20px; margin-top: 30px; text-align: center; }" +
-		       "        .test-links h3 { color: #333; margin-bottom: 15px; font-size: 16px; }" +
-		       "        .test-links a { color: #667eea; text-decoration: none; margin: 0 10px; }" +
-		       "        .test-links a:hover { text-decoration: underline; }" +
+		       "        .back-link { display: inline-block; margin-top: 20px; color: #667eea; text-decoration: none; font-size: 14px; }" +
+		       "        .back-link:hover { text-decoration: underline; }" +
 		       "        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }" +
 		       "        .testing .region-name::after { content: '测试中...'; font-size: 12px; color: #667eea; margin-left: auto; animation: pulse 1.5s infinite; }" +
 		       "    </style>" +
 		       "</head>" +
 		       "<body>" +
 		       "    <div class='container'>" +
-		       "        <h1>🌐 链路测速</h1>" +
+		       "        <h1>🚀 链路测速</h1>" +
 		       "        <p class='subtitle'>测试您到全球各地区的网络连接质量</p>" +
 		       "        " +
 		       "        <div class='ip-info' id='ipInfo'>" +
@@ -156,11 +221,7 @@ public class GatewayController {
 		       "        " +
 		       "        <div class='regions' id='regions'></div>" +
 		       "        " +
-		       "        <div class='test-links'>" +
-		       "            <h3>🔧 其他工具</h3>" +
-		       "            <a href='/api/v1/chaos'>混沌工程测试</a>" +
-		       "            <a href='/api/v1/linktest/regions'>测试节点列表</a>" +
-		       "        </div>" +
+		       "        <a href='/' class='back-link'>← 返回主页</a>" +
 		       "    </div>" +
 		       "    " +
 		       "    <script>" +
